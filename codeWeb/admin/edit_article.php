@@ -1,7 +1,3 @@
-<?php
-    include("../connect.php");
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,68 +28,41 @@
                         <a class="nav-link" href="../index.php">Trang ngoài</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="category.php">Thể loại</a>
+                        <a class="nav-link active fw-bold" href="category.php">Thể loại</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="author.php">Tác giả</a>
                     </li>
-                    <li class="nav-item active fw-bold">
-                        <a class="nav-link" href="article.php">Bài viết</a>
+                    <li class="nav-item">
+                        <a class="nav-link active fw-bold" href="article.php">Bài viết</a>
                     </li>
                 </ul>
                 </div>
             </div>
         </nav>
+
     </header>
-    <?php
-        $sql = "Select ma_bviet, tieude, ten_bhat, tomtat, noidung, ngayviet, hinhanh from baiviet";
-        $result = pdo($pdo, $sql);
-    ?>
     <main class="container mt-5 mb-5">
         <!-- <h3 class="text-center text-uppercase mb-3 text-primary">CẢM NHẬN VỀ BÀI HÁT</h3> -->
         <div class="row">
             <div class="col-sm">
-                <a href="add_category.php" class="btn btn-success">Thêm mới</a>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Tiêu đề</th>
-                            <th scope="col">Tên bài hát</th>
-                            <th scope="col">Tóm tắt</th>
-                            <th scope="col">Nội dung</th>
-                            <th scope="col">Ngày viết</th>
-                            <th scope="col">Hình ảnh</th>
-                            <th>Sửa</th>
-                            <th>Xóa</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                            if($result->rowCount() > 0){
-                            while($row = $result->fetch(PDO::FETCH_ASSOC)){
-                        ?>
-                        <tr>
-                            <th scope="row"><?php echo $row['ma_bviet'] ?></th>
-                            <td><?php echo $row['tieude'] ?></td>
-                            <td><?php echo $row['ten_bhat'] ?></td>
-                            <td><?php echo $row['tomtat'] ?></td>
-                            <td><?php echo $row['noidung'] ?></td>
-                            <td><?php echo $row['ngayviet'] ?></td>
-                            <td><?php echo $row['hinhanh'] ?></td>
-                            <td>
-                                <a href="edit_article.php?id=1"><i class="fa-solid fa-pen-to-square"></i></a>
-                            </td>
-                            <td>
-                                <a href=""><i class="fa-solid fa-trash"></i></a>
-                            </td>
-                        </tr>
-                        <?php
-                                }
-                            };
-                        ?>
-                    </tbody>
-                </table>
+                <h3 class="text-center text-uppercase fw-bold">Sửa thông tin thể loại</h3>
+                <form action="process_add_category.php" method="post">
+                <div class="input-group mt-3 mb-3">
+                        <span class="input-group-text" id="lblCatId">Mã thể loại</span>
+                        <input type="text" class="form-control" name="txtCatId" readonly value="1">
+                    </div>
+
+                    <div class="input-group mt-3 mb-3">
+                        <span class="input-group-text" id="lblCatName">Tên thể loại</span>
+                        <input type="text" class="form-control" name="txtCatName" value = "Nhạc trữ tình">
+                    </div>
+
+                    <div class="form-group  float-end ">
+                        <input type="submit" value="Lưu lại" class="btn btn-success">
+                        <a href="category.php" class="btn btn-warning ">Quay lại</a>
+                    </div>
+                </form>
             </div>
         </div>
     </main>
