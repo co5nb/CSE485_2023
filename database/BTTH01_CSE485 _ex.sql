@@ -3,7 +3,7 @@ SELECT * from baiviet,theloai  WHERE baiviet.ma_tloai = theloai.ma_tloai and the
 #b
 SELECT * FROM baiviet,tacgia WHERE baiviet.ma_tgia = tacgia.ma_tgia and tacgia.ten_tgia = "Nhacvietplus";
 #c
-SELECT theloai.ten_tloai from theloai,baiviet where baiviet.ma_tloai = theloai.ma_tloai and baiviet.tomtat = "";
+SELECT theloai.ten_tloai FROM theloai LEFT JOIN baiviet on theloai.ma_tloai = baiviet.ma_tloai WHERE baiviet.ma_tloai is Null;
 #d
 SELECT baiviet.ma_bviet, baiviet.tieude, baiviet.ten_bhat, tacgia.ten_tgia, theloai.ten_tloai, baiviet.ngayviet FROM baiviet,tacgia,theloai 
 where baiviet.ma_tgia = tacgia.ma_tgia and baiviet.ma_tloai = theloai.ma_tloai;

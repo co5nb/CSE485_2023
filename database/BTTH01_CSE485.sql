@@ -2,8 +2,8 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: 127.0.0.1:3300
--- Thời gian đã tạo: Th2 22, 2023 lúc 10:04 AM
+-- Máy chủ: 127.0.0.1:3307
+-- Thời gian đã tạo: Th2 24, 2023 lúc 09:33 AM
 -- Phiên bản máy phục vụ: 10.4.27-MariaDB
 -- Phiên bản PHP: 8.2.0
 
@@ -31,13 +31,13 @@ CREATE TABLE `baiviet` (
   `ma_bviet` int(10) UNSIGNED NOT NULL,
   `tieude` varchar(200) NOT NULL,
   `ten_bhat` varchar(100) NOT NULL,
-  `ma_tloai` int(45) UNSIGNED NOT NULL,
+  `ma_tloai` int(10) UNSIGNED NOT NULL,
   `tomtat` text NOT NULL,
   `noidung` text DEFAULT NULL,
-  `ma_tgia` int(11) NOT NULL,
+  `ma_tgia` int(10) UNSIGNED NOT NULL,
   `ngayviet` datetime NOT NULL DEFAULT current_timestamp(),
   `hinhanh` varchar(200) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `baiviet`
@@ -65,10 +65,10 @@ INSERT INTO `baiviet` (`ma_bviet`, `tieude`, `ten_bhat`, `ma_tloai`, `tomtat`, `
 --
 
 CREATE TABLE `tacgia` (
-  `ma_tgia` int(11) NOT NULL,
+  `ma_tgia` int(10) UNSIGNED NOT NULL,
   `ten_tgia` varchar(100) NOT NULL,
   `hinh_tgia` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `tacgia`
@@ -91,9 +91,9 @@ INSERT INTO `tacgia` (`ma_tgia`, `ten_tgia`, `hinh_tgia`) VALUES
 --
 
 CREATE TABLE `theloai` (
-  `ma_tloai` int(45) UNSIGNED NOT NULL,
+  `ma_tloai` int(10) UNSIGNED NOT NULL,
   `ten_tloai` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `theloai`
