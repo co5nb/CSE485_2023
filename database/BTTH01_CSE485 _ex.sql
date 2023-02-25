@@ -87,6 +87,7 @@ BEGIN
     END IF;
 END;
 
+DELIMITER //
 CREATE TRIGGER tg_CapNhatTheLoai_2 AFTER UPDATE ON baiviet FOR EACH ROW
 BEGIN
     IF (NEW.ma_tloai != OLD.ma_tloai AND OLD.ma_tloai IS NOT NULL) THEN
@@ -102,8 +103,11 @@ BEGIN
         UPDATE theloai SET SLBaiViet = (SELECT COUNT(*) FROM baiviet WHERE ma_tloai = NEW.ma_tloai) WHERE ma_tloai = NEW.ma_tloai;
         UPDATE theloai SET SLBaiViet = (SELECT COUNT(*) FROM baiviet WHERE ma_tloai = OLD.ma_tloai) WHERE ma_tloai = OLD.ma_tloai;
     END IF;
-END;
+END;//
 
+DELIMITER ;
+
+DELIMITER//
 CREATE TRIGGER tg_CapNhatTheLoai_3 AFTER DELETE ON baiviet FOR EACH ROW
 BEGIN
     IF (OLD.ma_tloai IS NOT NULL) THEN
