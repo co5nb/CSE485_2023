@@ -3,7 +3,10 @@ SELECT * from baiviet,theloai  WHERE baiviet.ma_tloai = theloai.ma_tloai and the
 #b
 SELECT * FROM baiviet,tacgia WHERE baiviet.ma_tgia = tacgia.ma_tgia and tacgia.ten_tgia = "Nhacvietplus";
 #c
-SELECT theloai.ten_tloai from theloai,baiviet where baiviet.ma_tloai = theloai.ma_tloai and baiviet.tomtat = "";
+SELECT theloai.ten_tloai
+FROM theloai
+LEFT JOIN baiviet ON theloai.ma_tloai = baiviet.ma_tloai
+WHERE baiviet.ma_tloai IS NULL;
 #d
 SELECT baiviet.ma_bviet, baiviet.tieude, baiviet.ten_bhat, tacgia.ten_tgia, theloai.ten_tloai, baiviet.ngayviet FROM baiviet,tacgia,theloai 
 where baiviet.ma_tgia = tacgia.ma_tgia and baiviet.ma_tloai = theloai.ma_tloai;
@@ -31,19 +34,18 @@ ORDER BY soLuong DESC
 LIMIT 2;
 
 #g
-SELECT baiviet.tieude FROM baiviet where baiviet.ten_bhat  
-like '%yêu%' or baiviet.ten_bhat like '%thương%' or baiviet.ten_bhat like '%anh%' or baiviet.ten_bhat like '%em%';
+SELECT * FROM baiviet
+WHERE ten_bhat LIKE "%yêu%" or ten_bhat LIKE "%thương%" or ten_bhat LIKE "%anh%" or ten_bhat LIKE "%em%";
 
 #h
-SELECT baiviet.tieude FROM baiviet where baiviet.ten_bhat  
-like '%yêu%' or baiviet.ten_bhat like '%thương%' or baiviet.ten_bhat like '%anh%' or baiviet.ten_bhat 
-like '%em%' or baiviet.tieude LIKE '%thương%' or baiviet.tieude LIKE '%anh%' or baiviet.tieude 
-LIKE '%yêu%' or baiviet.tieude LIKE '%em%';
+SELECT * FROM baiviet
+WHERE tieude LIKE "%yêu%" or tieude LIKE "%thương%" or tieude LIKE "%anh%" or tieude LIKE "%em%" 
+or ten_bhat LIKE "%yêu%" or ten_bhat LIKE "%thương%" or ten_bhat LIKE "%anh%" or ten_bhat LIKE "%em%";
 
-SELECT baiviet.tieude
+SELECT *
 FROM baiviet
-WHERE baiviet.ten_bhat REGEXP 'yêu|thương|anh|em'
-   OR baiviet.tieude REGEXP 'yêu|thương|anh|em';
+WHERE ten_bhat REGEXP 'yêu|thương|anh|em'
+   OR tieude REGEXP 'yêu|thương|anh|em';
 
 #i
 CREATE VIEW vw_Music AS 
@@ -76,4 +78,50 @@ CALL sp_DSBaiViet('Rock')
 
 
 
+#k
+DELIMITER //
+CREATE TRIGGER tg_CapNhatTheLoai AFTER INSERT ON baiviet FOR EACH ROW
+BEGIN
+    IF (NEW.ma_tloai IS NOT NULL) THEN
+        UPDATE theloai SET SLBaiViet = (SELECT COUNT(*) FROM baiviet WHERE ma_tloai = NEW.ma_tloai) WHERE ma_tloai = NEW.ma_tloai;
+    END IF;
+END;
 
+CREATE TRIGGER tg_CapNhatTheLoai_2 AFTER UPDATE ON baiviet FOR EACH ROW
+BEGIN
+    IF (NEW.ma_tloai != OLD.ma_tloai AND OLD.ma_tloai IS NOT NULL) THEN
+        UPDATE theloai SET SLBaiViet = (SELECT COUNT(*) FROM baiviet WHERE ma_tloai = NEW.ma_tloai) WHERE ma_tloai = NEW.ma_tloai;
+        UPDATE theloai SET SLBaiViet = (SELECT COUNT(*) FROM baiviet WHERE ma_tloai = OLD.ma_tloai) WHERE ma_tloai = OLD.ma_tloai;
+    ELSEIF (NEW.ma_tloai IS NULL AND OLD.ma_tloai IS NOT NULL) THEN
+        UPDATE theloai SET SLBaiViet = (SELECT COUNT(*) FROM baiviet WHERE ma_tloai = OLD.ma_tloai) WHERE ma_tloai = OLD.ma_tloai;
+    ELSEIF (NEW.ma_tloai IS NOT NULL AND OLD.ma_tloai IS NULL) THEN
+        UPDATE theloai SET SLBaiViet = (SELECT COUNT(*) FROM baiviet WHERE ma_tloai = NEW.ma_tloai) WHERE ma_tloai = NEW.ma_tloai;
+    ELSEIF (NEW.ma_tloai IS NOT NULL AND OLD.ma_tloai IS NOT NULL AND NEW.ma_tloai = OLD.ma_tloai) THEN
+        UPDATE theloai SET SLBaiViet = (SELECT COUNT(*) FROM baiviet WHERE ma_tloai = NEW.ma_tloai) WHERE ma_tloai = NEW.ma_tloai;
+    ELSEIF (NEW.ma_tloai IS NOT NULL AND OLD.ma_tloai IS NOT NULL AND NEW.ma_tloai != OLD.ma_tloai) THEN
+        UPDATE theloai SET SLBaiViet = (SELECT COUNT(*) FROM baiviet WHERE ma_tloai = NEW.ma_tloai) WHERE ma_tloai = NEW.ma_tloai;
+        UPDATE theloai SET SLBaiViet = (SELECT COUNT(*) FROM baiviet WHERE ma_tloai = OLD.ma_tloai) WHERE ma_tloai = OLD.ma_tloai;
+    END IF;
+END;
+
+CREATE TRIGGER tg_CapNhatTheLoai_3 AFTER DELETE ON baiviet FOR EACH ROW
+BEGIN
+    IF (OLD.ma_tloai IS NOT NULL) THEN
+        UPDATE theloai SET SLBaiViet = (SELECT COUNT(*) FROM baiviet WHERE ma_tloai = OLD.ma_tloai) WHERE ma_tloai = OLD.ma_tloai;
+    END IF;
+END;//
+
+DELIMITER ;
+
+#l
+CREATE TABLE `btth01_cse485`.`users` (
+	`username` VARCHAR(50) NOT NULL , 
+	`pass_word` VARCHAR(20) NOT NULL , 
+	`fullname` VARCHAR(50) NOT NULL , 
+	`age` INT NOT NULL , 
+	`access` VARCHAR(10) NOT NULL DEFAULT 'user' , 
+	PRIMARY KEY (`username`)) 
+	ENGINE = InnoDB;
+INSERT INTO `users` (`username`, `pass_word`, `fullname`, `age`, `access`) 
+	VALUES ('admin', 'admin6868', 'Admin', '22', 'admin'), 
+	('0343282228', 'quangthai1704', 'Nguyễn Quang Thái', '21', 'user');
